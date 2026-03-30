@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veloce Haute Horlogerie Geneva</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bellefair&family=Tenor+Sans&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #030303;
+            --surface: #0a0a0a;
+            --gold: #c5a059;
+            --gold-light: #e3c498;
+            --text-main: #e0e0e0;
+            --text-dim: #707070;
+            --font-serif: 'Bellefair', serif;
+            --font-sans: 'Tenor Sans', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: 0.5s;
+        }
+
+        .logo {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            color: var(--gold);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover { opacity: 1; color: var(--gold-light); }
+
+        .hero {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.45);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.9;
+            color: #fff;
+            margin-bottom: 2rem;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 0.8rem;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        section { padding: 8rem 6%; }
+
+        .section-header {
+            margin-bottom: 5rem;
+            text-align: center;
+        }
+
+        .section-tag {
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-size: 0.7rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .big-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: var(--text-main);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .card {
+            background: #080808;
+            border: 1px solid rgba(255,255,255,0.03);
+            padding: 3rem 2rem;
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card:hover {
+            border-color: var(--gold);
+            background: #0c0c0c;
+            transform: translateY(-15px);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 280px;
+            margin-bottom: 2.5rem;
+            transition: 0.7s;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .card:hover .card-img { transform: scale(1.08); }
+
+        .card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            color: var(--gold-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .card span {
+            color: var(--text-dim);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        #modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.98);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            backdrop-filter: blur(25px);
+        }
+
+        .modal-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1100px;
+            width: 100%;
+            gap: 4rem;
+            background: #050505;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            padding: 4rem;
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #080808;
+        }
+
+        .modal-img img {
+            max-width: 100%;
+            max-height: 450px;
+            object-fit: contain;
+        }
+
+        .modal-info h2 {
+            font-family: var(--font-serif);
+            font-size: 2.8rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-info p {
+            color: var(--text-main);
+            font-size: 0.9rem;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            white-space: pre-line;
+            text-align: justify;
+        }
+
+        .closing-header {
+            background: #050505;
+            padding: 8rem 6% 3rem;
+            border-top: 1px solid #111;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+        }
+
+        .footer-brand h2 {
+            font-family: var(--font-serif);
+            color: var(--gold);
+            font-size: 2.2rem;
+            letter-spacing: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            max-width: 350px;
+            line-height: 1.8;
+        }
+
+        .footer-col h4 {
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 1rem; }
+
+        .footer-col ul li a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .footer-col ul li a:hover { color: var(--gold); padding-left: 5px; }
+
+        .footer-bottom {
+            padding-top: 3rem;
+            border-top: 1px solid #111;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            color: var(--text-dim);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 1.2rem 3rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .btn:hover {
+            background: var(--gold);
+            color: #000;
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 1024px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .modal-content { grid-template-columns: 1fr; padding: 2.5rem; gap: 2rem; overflow-y: auto; }
+            .modal-info h2 { font-size: 2.2rem; }
+            .footer-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .footer-bottom { flex-direction: column; gap: 1.5rem; text-align: center; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <h2 style="font-family: var(--font-serif); letter-spacing: 15px; color: var(--gold); font-size: 1.2rem;">VELOCE</h2>
+    </div>
+
+    <div id="modal">
+        <div class="modal-content">
+            <div class="modal-img">
+                <img id="m-img" src="" alt="Veloce Detail">
+            </div>
+            <div class="modal-info">
+                <h2 id="m-title"></h2>
+                <p id="m-desc"></p>
+                <button class="btn" onclick="closeModal()">Return</button>
+            </div>
+        </div>
+    </div>
+
+    <nav id="navbar">
+        <a href="#" class="logo">Veloce</a>
+        <div class="nav-links">
+            <a href="#koleksi">Collections</a>
+            <a onclick="openModal('Atelier')">The Atelier</a>
+            <a onclick="openModal('Inquiry')">Inquiry</a>
+        </div>
+    </nav>
+
+    <main>
+
+        <section class="hero" id="hero">
+            <div class="hero-bg">
+                <img src="https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Veloce Masterpiece">
+            </div>
+            <div class="hero-content">
+                <p>Meticulously Crafted in Geneva</p>
+                <h1>Eternal<br>Heritage.</h1>
+            </div>
+        </section>
+
+        <section id="koleksi">
+            <div class="section-header">
+                <span class="section-tag">Limited Series</span>
+                <h2 class="big-title">Masterpiece Catalog</h2>
+            </div>
+
+            <div class="grid">
+                <div class="card" onclick="openModal('Aurum')">
+                    <div class="card-img">
+                        <img src="https://images.pexels.com/photos/277390/pexels-photo-277390.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Aurum">
+                    </div>
+                    <h3>Aurum Perpetual</h3>
+                    <span>18K Rose Gold | Tourbillon</span>
+                </div>
+
+                <div class="card" onclick="openModal('Obsidian')">
+                    <div class="card-img">
+                        <img src="https://images.pexels.com/photos/125779/pexels-photo-125779.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Obsidian">
+                    </div>
+                    <h3>Obsidian Noir</h3>
+                    <span>Ceramic | Skeleton Caliber</span>
+                </div>
+
+                <div class="card" onclick="openModal('Argentum')">
+                    <div class="card-img">
+                        <img src="https://images.pexels.com/photos/280250/pexels-photo-280250.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Argentum">
+                    </div>
+                    <h3>Argentum Classic</h3>
+                    <span>Platinum | Blue Sunray Dial</span>
+                </div>
+
+                <div class="card" onclick="openModal('Chronos')">
+                    <div class="card-img">
+                        <img src="https://images.pexels.com/photos/2113994/pexels-photo-2113994.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Chronos">
+                    </div>
+                    <h3>Chronos Master</h3>
+                    <span>Steel | Grand Complication</span>
+                </div>
+
+                <div class="card" onclick="openModal('Mariner')">
+                    <div class="card-img">
+                        <img src="https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Mariner">
+                    </div>
+                    <h3>Mariner Deep</h3>
+                    <span>Grade 5 Titanium | Diver</span>
+                </div>
+
+                <div class="card" onclick="openModal('Zenith')">
+                    <div class="card-img">
+                        <img src="https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Zenith">
+                    </div>
+                    <h3>Zenith Phase</h3>
+                    <span>White Gold | Moonphase</span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="closing-header">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2>VELOCE</h2>
+                    <p>Dedicated to the pursuit of horological perfection. We blend Swiss heritage with avant garde engineering to create timepieces that transcend generations.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Collections</h4>
+                    <ul>
+                        <li><a onclick="openModal('Aurum')">Grand Complications</a></li>
+                        <li><a onclick="openModal('Mariner')">Professional Diver</a></li>
+                        <li><a onclick="openModal('Obsidian')">Limited Heritage</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Information</h4>
+                    <ul>
+                        <li><a onclick="openModal('FAQ')">Customer FAQ</a></li>
+                        <li><a onclick="openModal('Terms')">Terms & Conditions</a></li>
+                        <li><a onclick="openModal('Privacy')">Privacy Protection</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Global Boutiques</h4>
+                    <ul>
+                        <li><a onclick="openModal('Geneva')">Geneva Flagship</a></li>
+                        <li><a onclick="openModal('NYC')">New York Fifth Ave</a></li>
+                        <li><a onclick="openModal('Tokyo')">Tokyo Ginza</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&cop 2026 Veloce Horology SA. Switzerland. All Rights Reserved.</p>
+                <p>Haute Horlogerie Excellence</p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+            tl.to("#loader", { opacity: 0, duration: 1.2, ease: "power4.inOut" })
+              .set("#loader", { display: "none" })
+              .from(".hero-content h1", { y: 100, opacity: 0, duration: 2, ease: "expo.out" }, "-=0.5")
+              .from(".hero-content p", { opacity: 0, duration: 1.5 }, "-=1.5");
+
+            gsap.to(".hero-bg img", {
+                yPercent: 20,
+                scale: 1.1,
+                scrollTrigger: {
+                    trigger: "#hero",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                nav.style.background = "rgba(3,3,3,0.96)";
+                nav.style.padding = "1.2rem 6%";
+            } else {
+                nav.style.background = "transparent";
+                nav.style.padding = "2rem 6%";
+            }
+        });
+
+        const modalData = {
+            'Aurum': { 
+                title: 'Aurum Perpetual', 
+                desc: 'The pinnacle of luxury. Our Aurum Perpetual features a 18K Rose Gold case and a hand-finished tourbillon. \n\nEvery component is polished for over 40 hours to achieve the Geneva Seal standard. It represents the ultimate expression of our technical prowess, featuring a power reserve of 72 hours and a perpetual calendar accurate for 100 years.', 
+                img: 'https://images.pexels.com/photos/277390/pexels-photo-277390.jpeg?auto=compress&cs=tinysrgb&w=800' 
+            },
+            'Obsidian': { 
+                title: 'Obsidian Noir', 
+                desc: 'Innovation meets darkness. The Obsidian Noir is crafted from high-density technical ceramic, ensuring it remains scratch-free for a lifetime. \n\nThe skeletonized dial provides a mesmerizing view into the V-88 Caliber movement, a mechanical marvel consisting of 248 individual parts working in seamless unison.', 
+                img: 'https://images.pexels.com/photos/125779/pexels-photo-125779.jpeg?auto=compress&cs=tinysrgb&w=800' 
+            },
+            'Argentum': { 
+                title: 'Argentum Classic', 
+                desc: 'Elegance in its purest form. A solid 950 Platinum case houses a stunning sunray-finished blue dial. \n\nDesigned for those who appreciate "Quiet Luxury," the Argentum Classic is a testament to the fact that true class doesn\'t need to shout to be heard. Includes a hand-stitched alligator strap.', 
+                img: 'https://images.pexels.com/photos/280250/pexels-photo-280250.jpeg?auto=compress&cs=tinysrgb&w=800' 
+            },
+            'Chronos': { 
+                title: 'Chronos Master', 
+                desc: 'Precision for the modern professional. The Chronos Master features a column-wheel chronograph with 1/10th of a second accuracy. \n\nThe casing is made of 904L surgical-grade steel, resistant to extreme magnetic fields and impacts. Perfect for those who demand performance alongside prestige.', 
+                img: 'https://images.pexels.com/photos/2113994/pexels-photo-2113994.jpeg?auto=compress&cs=tinysrgb&w=800' 
+            },
+            'Mariner': { 
+                title: 'Mariner Deep', 
+                desc: 'Conquer the ocean floor. With water resistance up to 300 meters, the Mariner Deep is built from Grade 5 Titanium for superior strength and weight reduction. \n\nFeatures a ceramic unidirectional bezel and high-intensity luminous indices for optimal legibility in the darkest depths.', 
+                img: 'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=800' 
+            },
+            'Zenith': { 
+                title: 'Zenith Phase', 
+                desc: 'The sky on your wrist. Our Zenith Moonphase displays the precise phase of the moon with a dial of genuine aventurine glass. \n\nInspired by the night sky over the Swiss Alps, this complication is accurate for 122 years before requiring a single day of adjustment.', 
+                img: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=800' 
+            },
+            'FAQ': {
+                title: 'Customer Service & FAQ',
+                desc: '1. International Warranty: Every Veloce timepiece comes with a 10-year global warranty covering manufacturing defects. \n\n2. Maintenance: We recommend a complete movement overhaul every 5 to 7 years at an authorized Veloce Service Center to ensure lifelong precision. \n\n3. Verifying Authenticity: Each watch contains an encrypted NFC chip within the digital warranty card for instant verification of ownership and authenticity. \n\n4. Bespoke Requests: We offer dial engraving and custom material options for our Platinum and 18K Gold collections through our Private Salon.',
+                img: 'https://images.pexels.com/photos/380769/pexels-photo-380769.jpeg?auto=compress&cs=tinysrgb&w=800'
+            },
+            'Terms': {
+                title: 'Terms & Conditions',
+                desc: 'By purchasing a Veloce timepiece, you enter an exclusive fellowship of enthusiasts. \n\nAll purchases must be registered on our secure blockchain-based ownership registry. This ensures the integrity of the secondary market and protects your investment. We strictly monitor resale within the first 12 months to maintain the exclusivity of our limited series. Ownership also grants you priority access to annual Veloce private events and early previews of upcoming high-complication releases.',
+                img: 'https://images.pexels.com/photos/48148/pexels-photo-48148.jpeg?auto=compress&cs=tinysrgb&w=800'
+            },
+            'Privacy': {
+                title: 'Privacy & Data Protection',
+                desc: 'Veloce Horology SA is committed to the highest standards of client privacy. \n\nYour personal data and collection details are protected by multi-layer encryption. We only use your information to provide personalized concierge services, maintenance alerts, and secure verification services. We never share client profiles with third parties. Your data is stored in our secure, private servers in Switzerland, adhering to the strictest European data protection laws.',
+                img: 'https://images.pexels.com/photos/60504/security-protection-anti-virus-software-60504.jpeg?auto=compress&cs=tinysrgb&w=800'
+            },
+            'Geneva': {
+                title: 'Geneva Flagship',
+                desc: 'Our headquarters on Rue du Rhône is a sanctuary for horology lovers. Explore our entire collection in a private lounge setting and visit our on-site museum of historical Veloce artifacts. \n\nFeatures a direct view into our finishing workshop where masters apply the final touches to each piece.',
+                img: 'https://images.pexels.com/photos/2739013/pexels-photo-2739013.jpeg?auto=compress&cs=tinysrgb&w=800'
+            },
+            'NYC': {
+                title: 'New York Fifth Avenue',
+                desc: 'A modern landmark in Manhattan. Our New York boutique features a contemporary "Complications Suite" designed for private consultations. \n\nHome to our North American Service Lab, providing rapid diagnostic services for our Western Hemisphere clientele.',
+                img: 'https://images.pexels.com/photos/313782/pexels-photo-313782.jpeg?auto=compress&cs=tinysrgb&w=800'
+            },
+            'Tokyo': {
+                title: 'Tokyo Ginza District',
+                desc: 'Reflecting the harmony between tradition and modernity. Our Ginza boutique offers a serene atmosphere with Zen-inspired architecture. \n\nFeatures an exclusive "Artisan Gallery" showcasing our hand-painted and engraved dials, celebrating the shared values of Swiss and Japanese craftsmanship.',
+                img: 'https://images.pexels.com/photos/161251/tokyo-japan-night-city-161251.jpeg?auto=compress&cs=tinysrgb&w=800'
+            },
+            'Atelier': {
+                title: 'Veloce Atelier',
+                desc: 'Located in the heart of the Jura mountains, our atelier is where time is mastered. Here, our watchmakers combine ancestral skills with precision technology to assemble each timepiece by hand. \n\nEvery Veloce watch is the product of hundreds of hours of dedicated labor, ensuring a soul and character that mass-produced items can never replicate.',
+                img: 'https://images.pexels.com/photos/221540/pexels-photo-221540.jpeg?auto=compress&cs=tinysrgb&w=800'
+            },
+            'Inquiry': {
+                title: 'Private Inquiry',
+                desc: 'Looking for a bespoke creation or a specific limited edition? Our concierge team is ready to assist you. \n\nPlease provide your contact details, and a senior consultant will reach out to schedule a private viewing at a location of your convenience, anywhere in the world.',
+                img: 'https://images.pexels.com/photos/135620/pexels-photo-135620.jpeg?auto=compress&cs=tinysrgb&w=800'
+            }
+        };
+
+        function openModal(key) {
+            const data = modalData[key];
+            if(!data) return;
+            
+            document.getElementById('m-title').innerText = data.title;
+            document.getElementById('m-desc').innerText = data.desc;
+            document.getElementById('m-img').src = data.img;
+            
+            const modal = document.getElementById('modal');
+            modal.style.display = 'flex';
+            gsap.fromTo(".modal-content", 
+                { opacity: 0, scale: 0.95, y: 50 }, 
+                { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: "expo.out" }
+            );
+            lenis.stop();
+        }
+
+        function closeModal() {
+            gsap.to(".modal-content", { 
+                opacity: 0, 
+                y: 30, 
+                duration: 0.5, 
+                onComplete: () => {
+                    document.getElementById('modal').style.display = 'none';
+                    lenis.start();
+                }
+            });
+        }
+
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+    </script>
+</body>
+</html>
